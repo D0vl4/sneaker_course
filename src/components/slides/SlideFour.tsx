@@ -3,12 +3,12 @@ import LightRays from "@/components/LightRays";
 import GradientText from "@/components/GradientText";
 import { AnimatedAIChat } from "@/components/ui/animated-ai-chat";
 
-interface SlideTwoProps {
+interface SlideFourProps {
   userResponse?: string;
   onSendResponse?: (message: string) => void;
 }
 
-export default function SlideTwo({ userResponse, onSendResponse }: SlideTwoProps) {
+export default function SlideFour({ userResponse, onSendResponse }: SlideFourProps) {
   return (
     <div className="relative w-full h-full overflow-hidden transition-colors duration-500" style={{ backgroundColor: 'var(--slide-bg)' }}>
       {/* Light rays background */}
@@ -51,14 +51,14 @@ export default function SlideTwo({ userResponse, onSendResponse }: SlideTwoProps
 
       {/* Main content area */}
       <div className="absolute z-10 top-[48px] sm:top-[52px] left-0 right-0 bottom-[80px] sm:bottom-[90px] overflow-y-auto px-4 sm:px-8 lg:px-12 py-4 sm:py-6 lg:py-8">
-        {/* Title with GradientText */}
+        {/* Title */}
         <div className="mb-4 sm:mb-6">
           <GradientText
             colors={["#ef4444", "#ffffff", "#ef4444"]}
             animationSpeed={6}
             className="!m-0 !justify-start text-xl sm:text-2xl lg:text-4xl !font-extrabold"
           >
-            Warm-up: What Does Sneaker Design Involve?
+            Why Study Sneaker Design?
           </GradientText>
         </div>
 
@@ -68,8 +68,8 @@ export default function SlideTwo({ userResponse, onSendResponse }: SlideTwoProps
             className="leading-relaxed transition-colors duration-500"
             style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text)', fontSize: 'var(--fs-body)' }}
           >
-            Sneaker design is a complex process that includes a variety of skills and tools.
-            List all the skills and tools you can think of that may be required in the design of a sneaker.
+            Let's watch Joe La Puma, host of Sneaker Shopping, discuss why sneaker design is so important.
+            As you watch the video, identify 3 reasons why sneaker design is important.
           </p>
         </div>
 
@@ -84,13 +84,13 @@ export default function SlideTwo({ userResponse, onSendResponse }: SlideTwoProps
           </p>
         </div>
 
-        {/* Two-column layout: chat input + image */}
+        {/* Two-column layout: chat input + video placeholder */}
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Animated AI Chat input */}
-          <div className="flex-1 min-h-[200px] sm:min-h-[280px] rounded-xl backdrop-blur-sm overflow-hidden flex flex-col transition-colors duration-500" style={{ backgroundColor: 'var(--slide-card-bg)', border: '1px solid var(--slide-card-border)' }}>
+          <div className="flex-1 min-h-[200px] sm:min-h-[280px] lg:h-[520px] rounded-xl backdrop-blur-sm overflow-hidden flex flex-col transition-colors duration-500" style={{ backgroundColor: 'var(--slide-card-bg)', border: '1px solid var(--slide-card-border)' }}>
             {userResponse ? (
               <div className="p-4 sm:p-5 flex flex-col h-full">
-                <span className="text-[10px] font-mono tracking-wider mb-3 transition-colors duration-500" style={{ color: 'var(--slide-text-muted)' }}>YOUR RESPONSE</span>
+                <span className="text-[10px] font-mono tracking-wider mb-3" style={{ color: 'var(--slide-text-faint)' }}>YOUR RESPONSE</span>
                 <p
                   className="text-sm sm:text-base leading-relaxed whitespace-pre-wrap transition-colors duration-500"
                   style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text)' }}
@@ -106,20 +106,23 @@ export default function SlideTwo({ userResponse, onSendResponse }: SlideTwoProps
             )}
           </div>
 
-          {/* Image placeholder */}
-          <div className="flex-1 min-h-[200px] sm:min-h-[280px] rounded-xl border-2 border-dashed border-yellow-400/50 bg-black/20 backdrop-blur-sm overflow-hidden relative">
-            <img
-              src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800&q=80"
-              alt="Sneaker design"
-              className="w-full h-full object-cover opacity-80"
-            />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3 sm:p-4">
+          {/* Video placeholder */}
+          <div className="flex-1 min-h-[200px] sm:min-h-[280px] lg:h-[520px] rounded-xl border-2 border-dashed border-yellow-400/50 bg-black/20 backdrop-blur-sm overflow-hidden relative flex items-center justify-center">
+            <div className="text-center p-4">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full border-2 flex items-center justify-center" style={{ borderColor: 'var(--slide-text-faint)' }}>
+                <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--slide-text-faint)' }}>
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
               <span
-                className="text-white/60 text-[10px] sm:text-xs"
-                style={{ fontFamily: "'Work Sans', sans-serif" }}
+                className="text-xs sm:text-sm transition-colors duration-500"
+                style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text-faint)' }}
               >
-                Image via Unsplash
+                Video placeholder
               </span>
+              <p className="text-[10px] mt-2 font-mono" style={{ color: 'var(--slide-text-faint)' }}>
+                Media will be added here
+              </p>
             </div>
           </div>
         </div>
@@ -136,7 +139,7 @@ export default function SlideTwo({ userResponse, onSendResponse }: SlideTwoProps
             Tools of the Design Cycle
           </span>
           <span className="text-[10px] sm:text-xs font-mono transition-colors duration-500" style={{ color: 'var(--slide-text-faint)' }}>
-            03/33
+            04/33
           </span>
         </div>
       </div>

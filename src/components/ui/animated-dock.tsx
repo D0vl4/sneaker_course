@@ -15,6 +15,7 @@ export interface DockItemData {
   onClick?: () => void;
   Icon: React.ReactNode;
   label?: string;
+  isActive?: boolean;
 }
 
 export interface AnimatedDockProps {
@@ -35,11 +36,14 @@ export const AnimatedDock = ({ className, items }: AnimatedDockProps) => {
       )}
     >
       {items.map((item, index) => (
-        <DockItem key={index} mouseX={mouseX}>
+        <DockItem key={index} mouseX={mouseX} isActive={item.isActive}>
           <button
             onClick={item.onClick}
             title={item.label}
-            className="grow flex items-center justify-center w-full h-full text-white/70 hover:text-white cursor-pointer bg-transparent border-none outline-none transition-colors duration-200"
+            className={cn(
+              "grow flex items-center justify-center w-full h-full cursor-pointer bg-transparent border-none outline-none transition-colors duration-200",
+              item.isActive ? "text-red-400" : "text-white/70 hover:text-white"
+            )}
           >
             {item.Icon}
           </button>
@@ -52,9 +56,10 @@ export const AnimatedDock = ({ className, items }: AnimatedDockProps) => {
 interface DockItemProps {
   mouseX: MotionValue<number>;
   children: React.ReactNode;
+  isActive?: boolean;
 }
 
-export const DockItem = ({ mouseX, children }: DockItemProps) => {
+export const DockItem = ({ mouseX, children, isActive }: DockItemProps) => {
   const ref = useRef<HTMLDivElement>(null);
 
   const distance = useTransform(mouseX, (val) => {
@@ -80,7 +85,12 @@ export const DockItem = ({ mouseX, children }: DockItemProps) => {
     <motion.div
       ref={ref}
       style={{ width }}
-      className="aspect-square w-10 rounded-full bg-white/15 border border-white/20 text-white flex items-center justify-center hover:bg-white/25 hover:border-white transition-colors duration-200"
+      className={cn(
+        "aspect-square w-10 rounded-full flex items-center justify-center transition-colors duration-200",
+        isActive
+          ? "bg-red-500/20 border border-red-500/50"
+          : "bg-white/15 border border-white/20 hover:bg-white/25 hover:border-white"
+      )}
     >
       <motion.div
         style={{ scale: iconSpring }}

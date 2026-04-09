@@ -198,7 +198,12 @@ export function AnimatedAIChat({ onSend, className }: AnimatedAIChatProps) {
                   adjustHeight();
                 }}
                 onKeyDown={handleKeyDown}
-                onFocus={() => setInputFocused(true)}
+                onFocus={(e) => {
+                  setInputFocused(true);
+                  setTimeout(() => {
+                    e.target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  }, 300);
+                }}
                 onBlur={() => setInputFocused(false)}
                 placeholder="Type your answer here..."
                 containerClassName="w-full"
@@ -290,11 +295,17 @@ export function AnimatedAIChat({ onSend, className }: AnimatedAIChatProps) {
       <AnimatePresence>
         {isTyping && (
           <motion.div
-            className="absolute bottom-4 left-1/2 -translate-x-1/2 backdrop-blur-xl rounded-full px-4 py-2 shadow-xl transition-colors duration-500"
-            style={{ backgroundColor: 'var(--submit-pill-bg)', border: '1px solid var(--submit-pill-border)' }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
+            className="fixed z-50 backdrop-blur-xl rounded-full px-5 py-2.5 shadow-2xl transition-colors duration-500"
+            style={{
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+              backgroundColor: 'var(--submit-pill-bg)',
+              border: '1px solid var(--submit-pill-border)',
+            }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
           >
             <div className="flex items-center gap-2 text-xs font-medium" style={{ color: 'var(--slide-text)' }}>
               <span>Submitting</span>

@@ -67,14 +67,16 @@ export const DockItem = ({ mouseX, children, isActive }: DockItemProps) => {
     return val - bounds.x - bounds.width / 2;
   });
 
-  const widthSync = useTransform(distance, [-150, 0, 150], [40, 80, 40]);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+
+  const widthSync = useTransform(distance, [-150, 0, 150], isMobile ? [40, 40, 40] : [40, 80, 40]);
   const width = useSpring(widthSync, {
     mass: 0.1,
     stiffness: 150,
     damping: 12,
   });
 
-  const iconScale = useTransform(width, [40, 80], [1, 1.5]);
+  const iconScale = useTransform(width, [40, 80], isMobile ? [1, 1] : [1, 1.5]);
   const iconSpring = useSpring(iconScale, {
     mass: 0.1,
     stiffness: 150,

@@ -151,12 +151,12 @@ export default function HeroBackground() {
     <div ref={containerRef} className="absolute inset-0 w-full h-full overflow-hidden">
       <div
         data-us-project="whwOGlfJ5Rz2rHaEUgHl"
-        style={{ 
-          width: '100%', 
-          height: '105%', 
+        style={{
+          width: '110%',
+          height: '115%',
           position: 'absolute',
-          top: 0,
-          left: 0
+          top: '-5%',
+          left: '-5%'
         }}
       />
     </div>

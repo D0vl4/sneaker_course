@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { motion } from "motion/react";
-import { X } from "lucide-react";
+import { X, Lock } from "lucide-react";
 
 const SLIDE_TITLES = [
   "Welcome",
@@ -12,11 +12,15 @@ const SLIDE_TITLES = [
   "Take the Assessment",
   "Match the Roles",
   "3D Sneaker Viewer",
+  "Key Design Disciplines",
+  "The Sneaker Design Process",
+  "Course Complete",
 ];
 
 interface SlideMenuProps {
   currentSlide: number;
   totalSlides: number;
+  unlockedUpTo: number;
   onGoToSlide: (index: number) => void;
   onClose: () => void;
 }
@@ -24,6 +28,7 @@ interface SlideMenuProps {
 export function SlideMenu({
   currentSlide,
   totalSlides,
+  unlockedUpTo,
   onGoToSlide,
   onClose,
 }: SlideMenuProps) {
@@ -56,17 +61,25 @@ export function SlideMenu({
       <div className="px-2 pb-2">
         {SLIDE_TITLES.slice(0, totalSlides).map((title, index) => {
           const isCurrent = index === currentSlide;
+          const isLocked = index > unlockedUpTo;
 
           return (
             <button
               key={index}
               onClick={() => {
+                if (isLocked) return;
                 onGoToSlide(index);
                 onClose();
               }}
+              disabled={isLocked}
               className={`
                 group relative flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors
-                ${isCurrent ? "bg-white/10" : "bg-transparent hover:bg-white/5"}
+                ${isLocked
+                  ? "cursor-not-allowed opacity-40"
+                  : isCurrent
+                    ? "bg-white/10"
+                    : "bg-transparent hover:bg-white/5"
+                }
               `}
             >
               {/* Current slide indicator - red left bar */}
@@ -82,7 +95,12 @@ export function SlideMenu({
               <span
                 className={`
                   shrink-0 font-mono text-[11px] tabular-nums
-                  ${isCurrent ? "text-red-400" : "text-white/25 group-hover:text-white/40"}
+                  ${isLocked
+                    ? "text-white/15"
+                    : isCurrent
+                      ? "text-red-400"
+                      : "text-white/25 group-hover:text-white/40"
+                  }
                   transition-colors
                 `}
                 style={{ fontFamily: "'JetBrains Mono', 'SF Mono', monospace" }}
@@ -94,7 +112,12 @@ export function SlideMenu({
               <span
                 className={`
                   text-sm leading-snug truncate
-                  ${isCurrent ? "text-white font-medium" : "text-white/50 group-hover:text-white/70"}
+                  ${isLocked
+                    ? "text-white/20"
+                    : isCurrent
+                      ? "text-white font-medium"
+                      : "text-white/50 group-hover:text-white/70"
+                  }
                   transition-colors
                 `}
                 style={{ fontFamily: "'Work Sans', sans-serif" }}
@@ -102,8 +125,13 @@ export function SlideMenu({
                 {title}
               </span>
 
+              {/* Lock icon for locked slides */}
+              {isLocked && (
+                <Lock size={12} strokeWidth={2} className="ml-auto shrink-0 text-white/20" />
+              )}
+
               {/* Current dot */}
-              {isCurrent && (
+              {isCurrent && !isLocked && (
                 <span className="ml-auto shrink-0 h-1.5 w-1.5 rounded-full bg-red-500" />
               )}
             </button>

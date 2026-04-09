@@ -43,18 +43,6 @@ function LoadingFallback() {
 export default function SlideThree() {
   return (
     <div className="relative w-full h-full overflow-hidden bg-black">
-      {/* Top bar — lesson label */}
-      <div className="absolute top-0 left-0 right-0 z-20 backdrop-blur-sm transition-colors duration-500" style={{ backgroundColor: 'var(--slide-bar-bg)', borderBottom: '1px solid var(--slide-bar-border)' }}>
-        <div className="px-4 sm:px-8 py-2.5 sm:py-3">
-          <span
-            className="text-xs sm:text-sm font-medium tracking-wide transition-colors duration-500"
-            style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text)' }}
-          >
-            Sneaker Design and the Designer Brief
-          </span>
-        </div>
-      </div>
-
       {/* 3D Canvas */}
       <Suspense fallback={<LoadingFallback />}>
         <Canvas
@@ -101,21 +89,6 @@ export default function SlideThree() {
         </span>
       </div>
 
-      {/* Bottom lesson info bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 backdrop-blur-sm transition-colors duration-500" style={{ backgroundColor: 'var(--slide-bar-bg)', borderTop: '1px solid var(--slide-bar-border)' }}>
-        <div className="px-4 sm:px-8 py-2 flex items-center justify-between">
-          <span
-            className="text-[10px] sm:text-xs transition-colors duration-500"
-            style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text-muted)' }}
-          >
-            <span className="text-red-400 font-semibold">Lesson 1:</span>{" "}
-            Tools of the Design Cycle
-          </span>
-          <span className="text-[10px] sm:text-xs font-mono transition-colors duration-500" style={{ color: 'var(--slide-text-faint)' }}>
-            05/33
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

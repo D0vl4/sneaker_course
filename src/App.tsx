@@ -13,9 +13,12 @@ import BorderGlow from "./components/BorderGlow";
 import { SlideMenu } from "./components/ui/SlideMenu";
 import SettingsPanel from "./components/ui/SettingsPanel";
 import type { SettingsConfig } from "./components/ui/SettingsPanel";
+import SlideSeven from "./components/slides/SlideSeven";
+import SlideEight from "./components/slides/SlideEight";
+import SlideNine from "./components/slides/SlideNine";
 import { LayoutList, Settings, ArrowLeft, ArrowRight } from "lucide-react";
 
-const TOTAL_SLIDES = 7;
+const TOTAL_SLIDES = 10;
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -23,6 +26,7 @@ function App() {
   const [showMenu, setShowMenu] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [slideResponses, setSlideResponses] = useState<Record<number, string>>({});
+  const [highestSlideReached, setHighestSlideReached] = useState(0);
   const [settings, setSettings] = useState<SettingsConfig>({
     fontSize: "medium",
     theme: "dark",
@@ -41,6 +45,7 @@ function App() {
     if (next < 0 || next >= TOTAL_SLIDES) return;
     setDirection(next > currentSlide ? 1 : -1);
     setCurrentSlide(next);
+    setHighestSlideReached((prev) => Math.max(prev, next));
   };
 
   const toggleMenu = () => {
@@ -200,24 +205,115 @@ function App() {
             <SlideThree />
           </motion.div>
         )}
+        {currentSlide === 7 && (
+          <motion.div
+            key="slide-7"
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0"
+          >
+            <SlideSeven />
+          </motion.div>
+        )}
+        {currentSlide === 8 && (
+          <motion.div
+            key="slide-8"
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0"
+          >
+            <SlideEight />
+          </motion.div>
+        )}
+        {currentSlide === 9 && (
+          <motion.div
+            key="slide-9"
+            custom={direction}
+            variants={variants}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+            className="absolute inset-0"
+          >
+            <SlideNine onClose={() => goToSlide(0)} />
+          </motion.div>
+        )}
       </AnimatePresence>
 
+      {/* Persistent top heading bar */}
+      {currentSlide >= 1 && currentSlide < TOTAL_SLIDES - 1 && (
+        <div
+          className="fixed top-0 left-0 right-0 z-50 backdrop-blur-sm transition-colors duration-500"
+          style={{
+            backgroundColor: "var(--slide-bar-bg)",
+            borderBottom: "1px solid var(--slide-bar-border)",
+          }}
+        >
+          <div className="px-4 sm:px-8 py-2.5 sm:py-3">
+            <span
+              className="text-xs sm:text-sm font-medium tracking-wide transition-colors duration-500"
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                color: "var(--slide-text)",
+              }}
+            >
+              Sneaker Design and the Designer Brief
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Progress bar — full width, below top heading bar */}
-      {currentSlide >= 1 && (
-        <motion.div
+      {currentSlide >= 1 && currentSlide < TOTAL_SLIDES - 1 && (
+        <div
           className="fixed top-[40px] sm:top-[46px] left-0 right-0 z-50 h-[2px] bg-black/20 overflow-hidden rounded-full"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.4 }}
         >
           <motion.div
             className="h-full rounded-full"
             style={{ background: 'linear-gradient(to right, #000000, #ef4444)' }}
-            initial={{ width: '0%' }}
             animate={{ width: `${((currentSlide + 1) / TOTAL_SLIDES) * 100}%` }}
-            transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
           />
-        </motion.div>
+        </div>
+      )}
+
+      {/* Persistent bottom lesson info bar */}
+      {currentSlide >= 1 && currentSlide < TOTAL_SLIDES - 1 && (
+        <div
+          className="fixed bottom-0 left-0 right-0 z-50 backdrop-blur-sm transition-colors duration-500"
+          style={{
+            backgroundColor: "var(--slide-bar-bg)",
+            borderTop: "1px solid var(--slide-bar-border)",
+          }}
+        >
+          <div className="px-4 sm:px-8 py-2.5 sm:py-3 flex items-center justify-between">
+            <span
+              className="text-[10px] sm:text-xs transition-colors duration-500"
+              style={{
+                fontFamily: "'Work Sans', sans-serif",
+                color: "var(--slide-text-muted)",
+              }}
+            >
+              <span className="text-red-400 font-semibold">Lesson 1:</span>{" "}
+              Tools of the Design Cycle
+            </span>
+            <span
+              className="text-[10px] sm:text-xs font-mono transition-colors duration-500"
+              style={{ color: "var(--slide-text)" }}
+            >
+              {String(currentSlide + 1).padStart(2, "0")}/{String(TOTAL_SLIDES).padStart(2, "0")}
+            </span>
+          </div>
+        </div>
       )}
 
       {/* Backdrop to close menu/settings on click anywhere */}
@@ -234,7 +330,7 @@ function App() {
       </AnimatePresence>
 
       {/* Persistent navigation dock — visible from slide 2 onwards */}
-      {currentSlide >= 1 && (
+      {currentSlide >= 1 && currentSlide < TOTAL_SLIDES - 1 && (
         <div className="fixed bottom-[44px] sm:bottom-[50px] left-1/2 -translate-x-1/2 z-50 flex flex-col items-center gap-2">
           {/* Slide menu / Settings panel — slides up above dock */}
           <AnimatePresence>
@@ -243,6 +339,7 @@ function App() {
                 <SlideMenu
                   currentSlide={currentSlide}
                   totalSlides={TOTAL_SLIDES}
+                  unlockedUpTo={highestSlideReached}
                   onGoToSlide={goToSlide}
                   onClose={() => setShowMenu(false)}
                 />

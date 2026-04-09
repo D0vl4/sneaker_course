@@ -74,29 +74,8 @@ export default function SlideFive() {
         className="z-[1] opacity-40 fill-white/15"
       />
 
-      {/* Top bar */}
-      <div
-        className="absolute top-0 left-0 right-0 z-10 backdrop-blur-sm transition-colors duration-500"
-        style={{
-          backgroundColor: "var(--slide-bar-bg)",
-          borderBottom: "1px solid var(--slide-bar-border)",
-        }}
-      >
-        <div className="px-4 sm:px-8 py-2.5 sm:py-3">
-          <span
-            className="text-xs sm:text-sm font-medium tracking-wide transition-colors duration-500"
-            style={{
-              fontFamily: "'Work Sans', sans-serif",
-              color: "var(--slide-text)",
-            }}
-          >
-            Sneaker Design and the Designer Brief
-          </span>
-        </div>
-      </div>
-
       {/* Main content area */}
-      <div className="absolute z-10 top-[48px] sm:top-[52px] left-0 right-0 bottom-[80px] sm:bottom-[90px] overflow-hidden px-4 sm:px-8 lg:px-12 py-4 sm:py-5 flex flex-col">
+      <div className="absolute z-10 top-[48px] sm:top-[52px] left-0 right-0 bottom-0 overflow-y-auto overflow-x-hidden px-4 sm:px-8 lg:px-12 py-4 sm:py-5 pb-36 sm:pb-40 flex flex-col">
         {/* Title */}
         <div className="mb-2 sm:mb-3 shrink-0">
           <GradientText
@@ -129,33 +108,6 @@ export default function SlideFive() {
         </div>
       </div>
 
-      {/* Bottom lesson info bar */}
-      <div
-        className="absolute bottom-0 left-0 right-0 z-10 backdrop-blur-sm transition-colors duration-500"
-        style={{
-          backgroundColor: "var(--slide-bar-bg)",
-          borderTop: "1px solid var(--slide-bar-border)",
-        }}
-      >
-        <div className="px-4 sm:px-8 py-2 flex items-center justify-between">
-          <span
-            className="text-[10px] sm:text-xs transition-colors duration-500"
-            style={{
-              fontFamily: "'Work Sans', sans-serif",
-              color: "var(--slide-text-muted)",
-            }}
-          >
-            <span className="text-red-400 font-semibold">Lesson 1:</span>{" "}
-            Tools of the Design Cycle
-          </span>
-          <span
-            className="text-[10px] sm:text-xs font-mono transition-colors duration-500"
-            style={{ color: "var(--slide-text-faint)" }}
-          >
-            06/33
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

@@ -177,9 +177,9 @@ export default function DragDropQuiz({ items, onComplete }: DragDropQuizProps) {
   const formatNumber = (n: number) => String(n).padStart(2, "0");
 
   return (
-    <div className="w-full h-full flex flex-col pb-16 sm:pb-20 overflow-hidden">
+    <div className="w-full h-full flex flex-col gap-4 overflow-y-auto overflow-x-hidden">
       {/* Drop zone rows */}
-      <div className="flex-1 flex flex-col gap-2 sm:gap-3 justify-center min-h-0">
+      <div className="flex flex-col gap-4 sm:gap-4">
         {items.map((item, slotIndex) => {
           const placedId = placements[slotIndex];
           const placedItem = placedId !== null ? getItemById(placedId) : null;
@@ -213,65 +213,68 @@ export default function DragDropQuiz({ items, onComplete }: DragDropQuizProps) {
           return (
             <div
               key={item.id}
-              className="flex items-center gap-2 sm:gap-3 lg:gap-4"
+              className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-4 lg:gap-5"
             >
-              {/* Number circle */}
-              <div
-                className="shrink-0 flex items-center justify-center rounded-full border-2"
-                style={{ width: 36, height: 36, minWidth: 36, backgroundColor: 'var(--slide-card-bg)', borderColor: 'var(--slide-text-faint)' }}
-              >
-                <span
-                  className="text-red-400 font-bold text-xs"
-                  style={{ fontFamily: "'Work Sans', sans-serif" }}
+              {/* Number + Drop zone row */}
+              <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto">
+                {/* Number circle */}
+                <div
+                  className="shrink-0 flex items-center justify-center rounded-full border-2"
+                  style={{ width: 32, height: 32, minWidth: 32, backgroundColor: 'var(--slide-card-bg)', borderColor: 'var(--slide-text-faint)' }}
                 >
-                  {formatNumber(slotIndex + 1)}
-                </span>
-              </div>
+                  <span
+                    className="text-red-400 font-bold text-xs"
+                    style={{ fontFamily: "'Work Sans', sans-serif" }}
+                  >
+                    {formatNumber(slotIndex + 1)}
+                  </span>
+                </div>
 
-              {/* Drop zone */}
-              <div
-                className={`relative shrink-0 rounded-lg cursor-pointer transition-all duration-300 flex items-center justify-center ${extraClass}`}
-                style={{
-                  width: "clamp(140px, 24vw, 260px)",
-                  height: "clamp(36px, 5vh, 46px)",
-                  ...borderStyle,
-                }}
-                onDragOver={(e) => handleDragOver(e, slotIndex)}
-                onDragLeave={handleDragLeave}
-                onDrop={(e) => handleDrop(e, slotIndex)}
-                onClick={() => handleSlotTap(slotIndex)}
-              >
-                <AnimatePresence mode="wait">
-                  {placedItem ? (
-                    <motion.span
-                      key={`placed-${placedItem.id}`}
-                      initial={{ opacity: 0, scale: 0.85 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.85 }}
-                      transition={{ duration: 0.25, ease: "easeOut" }}
-                      className="text-xs sm:text-sm font-medium px-2 truncate select-none"
-                      style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text)' }}
-                    >
-                      {placedItem.role}
-                    </motion.span>
-                  ) : showTapHint ? (
-                    <motion.span
-                      key="tap-hint"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 0.5 }}
-                      exit={{ opacity: 0 }}
-                      className="text-[10px] sm:text-xs italic select-none"
-                      style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text-faint)' }}
-                    >
-                      Tap to place
-                    </motion.span>
-                  ) : null}
-                </AnimatePresence>
+                {/* Drop zone - full width on mobile, fixed on desktop */}
+                <div
+                  className={`relative flex-1 sm:flex-initial rounded-lg cursor-pointer transition-all duration-300 flex items-center justify-center ${extraClass}`}
+                  style={{
+                    minWidth: 0,
+                    height: 44,
+                    ...borderStyle,
+                  }}
+                  onDragOver={(e) => handleDragOver(e, slotIndex)}
+                  onDragLeave={handleDragLeave}
+                  onDrop={(e) => handleDrop(e, slotIndex)}
+                  onClick={() => handleSlotTap(slotIndex)}
+                >
+                  <AnimatePresence mode="wait">
+                    {placedItem ? (
+                      <motion.span
+                        key={`placed-${placedItem.id}`}
+                        initial={{ opacity: 0, scale: 0.85 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.85 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        className="text-xs sm:text-base font-medium px-2 sm:px-3 truncate select-none"
+                        style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text)' }}
+                      >
+                        {placedItem.role}
+                      </motion.span>
+                    ) : showTapHint ? (
+                      <motion.span
+                        key="tap-hint"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 0.5 }}
+                        exit={{ opacity: 0 }}
+                        className="text-[10px] sm:text-xs italic select-none"
+                        style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text-faint)' }}
+                      >
+                        Tap to place
+                      </motion.span>
+                    ) : null}
+                  </AnimatePresence>
+                </div>
               </div>
 
               {/* Description */}
               <p
-                className="leading-snug line-clamp-3 min-w-0"
+                className="leading-snug line-clamp-2 sm:line-clamp-3 min-w-0 pl-10 sm:pl-0"
                 style={{
                   fontFamily: "'Work Sans', sans-serif",
                   fontSize: "var(--fs-body, 13px)",
@@ -285,16 +288,16 @@ export default function DragDropQuiz({ items, onComplete }: DragDropQuizProps) {
         })}
       </div>
 
-      {/* Bottom section: fixed height to prevent layout shifts */}
-      <div className="shrink-0 flex flex-col items-center gap-3 mt-3 sm:mt-4" style={{ minHeight: "90px" }}>
+      {/* Bottom section */}
+      <div className="flex flex-col items-center gap-3 mt-2 sm:mt-4">
         {/* Check button — always occupies space */}
-        <div className="h-10 flex items-center justify-center">
+        <div className="flex items-center justify-center">
           {allPlaced && !solved && (
             <motion.button
               onClick={handleCheck}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="px-6 py-2 rounded-lg bg-red-500/90 hover:bg-red-500 text-white text-sm font-semibold tracking-wide transition-all duration-300 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
+              className="px-8 py-2.5 rounded-lg bg-red-500/90 hover:bg-red-500 text-white text-base font-semibold tracking-wide transition-all duration-300 hover:shadow-[0_0_20px_rgba(239,68,68,0.4)] active:scale-95"
               style={{ fontFamily: "'Work Sans', sans-serif" }}
             >
               Check Answers{attempts > 0 ? ` (Attempt ${attempts + 1}/2)` : ""}
@@ -302,7 +305,7 @@ export default function DragDropQuiz({ items, onComplete }: DragDropQuizProps) {
           )}
           {solved && (
             <span
-              className="text-sm font-semibold px-4 py-1.5 rounded-full"
+              className="text-base font-semibold px-5 py-2 rounded-full"
               style={{
                 fontFamily: "'Work Sans', sans-serif",
                 color: "var(--slide-text)",
@@ -318,7 +321,7 @@ export default function DragDropQuiz({ items, onComplete }: DragDropQuizProps) {
         </div>
 
         {/* Label bank */}
-        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 min-h-[44px]">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap items-stretch sm:items-center sm:justify-center gap-2 sm:gap-4 min-h-[52px] w-full sm:w-auto">
           <AnimatePresence>
             {bankItems.map((item) => {
               const isSelected = selectedId === item.id;
@@ -341,8 +344,8 @@ export default function DragDropQuiz({ items, onComplete }: DragDropQuizProps) {
                   onDragEnd={handleDragEnd}
                   onClick={() => handleBankTap(item.id)}
                   className={`
-                    select-none rounded-lg px-4 sm:px-5 py-2 sm:py-2.5
-                    text-xs sm:text-sm font-medium transition-all duration-300
+                    select-none rounded-lg px-4 sm:px-6 py-2.5 sm:py-3 text-center
+                    text-sm sm:text-base font-medium transition-all duration-300
                     ${solved ? "cursor-default" : "cursor-grab active:cursor-grabbing"}
                     ${
                       isSelected

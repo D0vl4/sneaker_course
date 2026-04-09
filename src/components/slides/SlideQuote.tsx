@@ -30,18 +30,6 @@ export default function SlideQuote() {
         className="z-[1] opacity-40 fill-white/15"
       />
 
-      {/* Top bar — lesson label */}
-      <div className="absolute top-0 left-0 right-0 z-10 backdrop-blur-sm transition-colors duration-500" style={{ backgroundColor: 'var(--slide-bar-bg)', borderBottom: '1px solid var(--slide-bar-border)' }}>
-        <div className="px-4 sm:px-8 py-2.5 sm:py-3">
-          <span
-            className="text-xs sm:text-sm font-medium tracking-wide transition-colors duration-500"
-            style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text)' }}
-          >
-            Sneaker Design and the Designer Brief
-          </span>
-        </div>
-      </div>
-
       {/* Red corner crop marks */}
       <div className="absolute top-[8%] sm:top-[11%] left-[5%] sm:left-[8%] w-4 h-4 sm:w-5 sm:h-5 z-10">
         <div className="absolute top-0 left-0 w-full h-0.5 sm:h-1 bg-red-500" />
@@ -95,21 +83,6 @@ export default function SlideQuote() {
         </h2>
       </div>
 
-      {/* Bottom lesson info bar */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 backdrop-blur-sm transition-colors duration-500" style={{ backgroundColor: 'var(--slide-bar-bg)', borderTop: '1px solid var(--slide-bar-border)' }}>
-        <div className="px-4 sm:px-8 py-2 flex items-center justify-between">
-          <span
-            className="text-[10px] sm:text-xs transition-colors duration-500"
-            style={{ fontFamily: "'Work Sans', sans-serif", color: 'var(--slide-text-muted)' }}
-          >
-            <span className="text-red-400 font-semibold">Lesson 1:</span>{" "}
-            Tools of the Design Cycle
-          </span>
-          <span className="text-[10px] sm:text-xs font-mono transition-colors duration-500" style={{ color: 'var(--slide-text-faint)' }}>
-            01/33
-          </span>
-        </div>
-      </div>
     </div>
   );
 }

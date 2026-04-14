@@ -7,8 +7,15 @@ interface SlideOneProps {
 
 export default function SlideOne({ onLetsGo }: SlideOneProps) {
   return (
-    <div className="relative w-full h-full overflow-hidden bg-black">
-      {/* ASCII Vitruvian background */}
+    <div 
+      className="relative w-full h-full overflow-hidden bg-black"
+      style={{
+        backgroundImage: 'url(/main_bg.jpg)',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center'
+      }}
+    >
+      {/* 3D Model background */}
       <HeroBackground />
 
 

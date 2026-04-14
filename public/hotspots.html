@@ -20,7 +20,8 @@
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       color-scheme: dark;
       background-color: transparent !important;
       background: transparent !important;
@@ -38,6 +39,7 @@
       height: 100%;
       background-color: transparent !important;
       --poster-color: transparent;
+      cursor: default !important;
     }
 
     /* ── Hotspot ── */
@@ -235,8 +237,9 @@
 
 <body>
 
-  <model-viewer id="viewer" src="sneakers.glb" scale="1.3 1.3 1.3" camera-controls 
-    shadow-intensity="0" shadow-softness="0" 
+  <model-viewer id="viewer" src="sneakers.glb"
+    ar ar-modes="webxr scene-viewer quick-look" 
+    camera-controls interaction-prompt="none" tone-mapping="neutral" poster="poster.webp" shadow-intensity="1"
     style="background-color: transparent !important; --poster-color: transparent;">
 
     <button class="Hotspot" slot="hotspot-1"
@@ -326,15 +329,15 @@
     let active = null;
     let rafId = null;
 
-    
+
     function track3DEvent(eventName, details) {
-        if (window.parent && window.parent !== window) {
-            window.parent.postMessage({
-                source: 'sneaker_viewer_analytics',
-                event: eventName,
-                details: details
-            }, '*');
-        }
+      if (window.parent && window.parent !== window) {
+        window.parent.postMessage({
+          source: 'sneaker_viewer_analytics',
+          event: eventName,
+          details: details
+        }, '*');
+      }
     }
 
     const popup = document.getElementById('popup');
@@ -518,6 +521,11 @@
       // Also try to access the internal container
       const container = viewer.shadowRoot && viewer.shadowRoot.querySelector('.container');
       if (container) container.style.background = 'transparent';
+
+      // Override grab/hand cursor inside shadow DOM
+      const style = document.createElement('style');
+      style.textContent = '*, *::before, *::after { cursor: default !important; }';
+      viewer.shadowRoot.appendChild(style);
     });
   </script>
 </body>

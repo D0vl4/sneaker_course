@@ -1,5 +1,6 @@
 import { GLSLHills } from "@/components/ui/glsl-hills";
 import GradientText from "@/components/GradientText";
+import { analytics } from "@/lib/analytics";
 import type { FC } from "react";
 
 interface SlideNineProps {
@@ -54,14 +55,24 @@ const SlideNine: FC<SlideNineProps> = ({ onClose }) => {
           you now have a foundation in the tools of the design cycle.
         </p>
 
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl bg-red-500/90 hover:bg-red-500 text-white text-sm sm:text-base font-semibold tracking-wide transition-all duration-300 hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] active:scale-95"
-          style={{ fontFamily: "'Work Sans', sans-serif" }}
-        >
-          Close
-        </button>
+        {/* Buttons */}
+        <div className="flex flex-col items-center gap-4">
+          <button
+            onClick={onClose}
+            className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-xl bg-red-500/90 hover:bg-red-500 text-white text-sm sm:text-base font-semibold tracking-wide transition-all duration-300 hover:shadow-[0_0_30px_rgba(239,68,68,0.5)] active:scale-95"
+            style={{ fontFamily: "'Work Sans', sans-serif" }}
+          >
+            Close
+          </button>
+
+          <button
+            onClick={() => analytics.exportToCSV()}
+            className="px-6 py-2 rounded-xl border border-white/20 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white text-xs sm:text-sm font-medium tracking-wide transition-all duration-300"
+            style={{ fontFamily: "'Work Sans', sans-serif" }}
+          >
+            Download Course Report
+          </button>
+        </div>
       </div>
     </div>
   );

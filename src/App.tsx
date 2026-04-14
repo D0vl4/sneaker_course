@@ -16,6 +16,8 @@ import SlideSeven from "./components/slides/SlideSeven";
 import SlideEight from "./components/slides/SlideEight";
 import SlideNine from "./components/slides/SlideNine";
 import { LayoutList, Settings, ArrowLeft, ArrowRight } from "lucide-react";
+import { analytics } from "./lib/analytics";
+import { useEffect } from "react";
 
 const TOTAL_SLIDES = 9;
 
@@ -47,6 +49,27 @@ function App() {
     setHighestSlideReached((prev) => Math.max(prev, next));
   };
 
+  // Track slide entry/exit
+  useEffect(() => {
+    analytics.track(currentSlide, "Routing", "slide_enter", `Entered Slide ${currentSlide}`);
+    const startTime = Date.now();
+    return () => {
+      const durationStr = ((Date.now() - startTime) / 1000).toFixed(2);
+      analytics.track(currentSlide, "Routing", "slide_exit", `Exited Slide ${currentSlide}. Duration: ${durationStr}s`);
+    };
+  }, [currentSlide]);
+
+  // Listen for iframe analytics from hotspots.html
+  useEffect(() => {
+    const handleMessage = (e: MessageEvent) => {
+      if (e.data?.source === 'sneaker_viewer_analytics') {
+        analytics.track(currentSlide, "3DViewer", e.data.event, e.data.details);
+      }
+    };
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [currentSlide]);
+
   const toggleMenu = () => {
     setShowMenu((v) => !v);
     setShowSettings(false);
@@ -59,24 +82,36 @@ function App() {
 
   const dockItems: DockItemData[] = [
     {
-      onClick: toggleMenu,
+      onClick: () => {
+        analytics.track(currentSlide, "NavigationDock", "click", "Toggled Slides Menu");
+        toggleMenu();
+      },
       Icon: <LayoutList size={18} />,
       label: "Slides",
       isActive: showMenu,
     },
     {
-      onClick: toggleSettings,
+      onClick: () => {
+        analytics.track(currentSlide, "NavigationDock", "click", "Toggled Settings");
+        toggleSettings();
+      },
       Icon: <Settings size={18} />,
       label: "Settings",
       isActive: showSettings,
     },
     {
-      onClick: () => goToSlide(currentSlide - 1),
+      onClick: () => {
+        analytics.track(currentSlide, "NavigationDock", "click", "Previous Slide");
+        goToSlide(currentSlide - 1);
+      },
       Icon: <ArrowLeft size={18} />,
       label: "Back",
     },
     {
-      onClick: () => goToSlide(currentSlide + 1),
+      onClick: () => {
+        analytics.track(currentSlide, "NavigationDock", "click", "Next Slide");
+        goToSlide(currentSlide + 1);
+      },
       Icon: <ArrowRight size={18} />,
       label: "Next",
     },

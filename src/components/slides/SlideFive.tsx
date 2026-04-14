@@ -3,6 +3,7 @@ import LightRays from "@/components/LightRays";
 import GradientText from "@/components/GradientText";
 import QuizOrbital from "@/components/ui/quiz-orbital";
 import type { QuizAnswer } from "@/components/ui/quiz-orbital";
+import { analytics } from "@/lib/analytics";
 
 const quizAnswers: QuizAnswer[] = [
   {
@@ -104,7 +105,17 @@ export default function SlideFive() {
 
         {/* Quiz orbital fills remaining space */}
         <div className="flex-1 min-h-0">
-          <QuizOrbital answers={quizAnswers} />
+          <QuizOrbital 
+            answers={quizAnswers} 
+            onAnswered={(correct, answer) => {
+              analytics.track(
+                4, // 0-indexed, slide 5 is index 4
+                "SlideFive", 
+                "quiz_answered", 
+                `Answer ID: ${answer.id}, Text: "${answer.text}", Correct: ${correct}`
+              );
+            }}
+          />
         </div>
       </div>
 

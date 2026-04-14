@@ -2,6 +2,7 @@ import { DotPattern } from "@/components/ui/dot-pattern";
 import LightRays from "@/components/LightRays";
 import GradientText from "@/components/GradientText";
 import DragDropQuiz from "@/components/ui/drag-drop-quiz";
+import { analytics } from "@/lib/analytics";
 
 import type { FC } from "react";
 
@@ -99,7 +100,12 @@ const SlideSix: FC = () => {
 
         {/* Quiz fills remaining space */}
         <div className="flex-1 min-h-0">
-          <DragDropQuiz items={quizItems} />
+          <DragDropQuiz 
+            items={quizItems} 
+            onComplete={(allCorrect) => {
+              analytics.track(5, "SlideSix", "quiz_completed", `Success: ${allCorrect}`);
+            }}
+          />
         </div>
       </div>
 

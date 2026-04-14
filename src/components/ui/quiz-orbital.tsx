@@ -13,7 +13,7 @@ export interface QuizAnswer {
 
 export interface QuizOrbitalProps {
   answers: QuizAnswer[];
-  onAnswered?: (correct: boolean) => void;
+  onAnswered?: (correct: boolean, answer: QuizAnswer) => void;
 }
 
 const NODE_SIZE = 52;
@@ -35,10 +35,10 @@ export default function QuizOrbital({ answers, onAnswered }: QuizOrbitalProps) {
 
     if (selected.isCorrect) {
       setSolved(true);
-      onAnswered?.(true);
+      onAnswered?.(true, selected);
     } else {
       setWrongAttempts((prev) => new Set(prev).add(selectedId));
-      onAnswered?.(false);
+      onAnswered?.(false, selected);
     }
   }, [selectedId, answers, onAnswered]);
 

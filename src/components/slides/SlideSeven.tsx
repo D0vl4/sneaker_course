@@ -65,7 +65,7 @@ const SlideSeven: FC = () => {
         {/* 3D Model Iframe */}
         <div className="flex-1 min-h-0 w-full max-w-[1200px] mx-auto relative mb-4">
           <iframe 
-            src="/hotspots.html?v=4" 
+            src="/hotspots.html?v=5" 
             title="3D Sneaker Viewer" 
             className="w-full h-full border-none"
             style={{ background: "transparent", colorScheme: "dark" }}

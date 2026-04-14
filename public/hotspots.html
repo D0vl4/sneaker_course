@@ -326,6 +326,17 @@
     let active = null;
     let rafId = null;
 
+    
+    function track3DEvent(eventName, details) {
+        if (window.parent && window.parent !== window) {
+            window.parent.postMessage({
+                source: 'sneaker_viewer_analytics',
+                event: eventName,
+                details: details
+            }, '*');
+        }
+    }
+
     const popup = document.getElementById('popup');
     const connLine = document.getElementById('connector-line');
     const lineDot = document.getElementById('line-dot');
@@ -405,6 +416,7 @@
         const b = getBtn(active);
         if (b) b.classList.remove('is-active');
       }
+      track3DEvent('hotspot_closed', 'Closed hotspot: ' + active);
       active = null;
       setTimeout(() => { if (!active) popup.style.display = 'none'; }, 300);
     }
@@ -432,6 +444,7 @@
     function _doShowPopup(key, d) {
       stopTracking();
       active = key;
+      track3DEvent('hotspot_opened', 'Opened hotspot: ' + key + ' (' + d.title + ')');
 
       const btn = getBtn(key);
       if (btn) btn.classList.add('is-active');

@@ -1,0 +1,248 @@
+:not(:defined) > * {
+  display: none;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: transparent !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+model-viewer {
+  width: 100%;
+  height: 100%;
+  background-color: transparent !important;
+  --poster-color: transparent;
+}
+
+/* ────────────────────────────────────────────────
+   Hotspot
+──────────────────────────────────────────────── */
+
+.Hotspot {
+  outline: none !important;
+  background: #ef4444;
+  border-radius: 50%;
+  border: 2px solid rgba(239, 68, 68, 0.2);
+  box-shadow:
+    0 0 0 5px rgba(239, 68, 68, 0.1),
+    0 2px 12px rgba(239, 68, 68, 0.35);
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  position: relative;
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s ease;
+  animation: hotspot-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes hotspot-pulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 5px rgba(239, 68, 68, 0.10),
+      0 2px 12px rgba(239, 68, 68, 0.35);
+  }
+  50% {
+    box-shadow:
+      0 0 0 10px rgba(239, 68, 68, 0.05),
+      0 2px 22px rgba(239, 68, 68, 0.55);
+  }
+}
+
+.Hotspot:hover {
+  transform: scale(1.4);
+  box-shadow:
+    0 0 0 7px rgba(239, 68, 68, 0.15),
+    0 4px 20px rgba(239, 68, 68, 0.55);
+  animation: none;
+}
+
+.Hotspot.is-active {
+  background-color: transparent !important;
+  border-color: #ef4444;
+  box-shadow:
+    0 0 0 4px rgba(239, 68, 68, 0.45),
+    0 4px 20px rgba(239, 68, 68, 0.6);
+  transform: scale(1.25);
+  animation: none;
+}
+
+.Hotspot:not([data-visible]) {
+  opacity: 0;
+  pointer-events: none;
+  animation: none;
+}
+
+/* ────────────────────────────────────────────────
+   SVG connector overlay
+──────────────────────────────────────────────── */
+
+#connector-svg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 100;
+}
+
+#line-path,
+#line-dot,
+#line-ring {
+  transition: opacity 0.25s ease;
+}
+
+/* ────────────────────────────────────────────────
+   Popup card
+──────────────────────────────────────────────── */
+
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 200;
+  width: 308px;
+
+  background: #111313;
+  border: 1px solid #222525;
+  border-left: 2px solid #ef4444;
+  border-radius: 12px;
+  padding: 26px 26px 20px;
+
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.025),
+    0 24px 70px rgba(0, 0, 0, 0.75),
+    0 6px 20px rgba(0, 0, 0, 0.45);
+
+  opacity: 0;
+  transform: translateY(8px) scale(0.965);
+  transition:
+    opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+  will-change: transform, opacity;
+}
+
+.popup.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Close button */
+.popup-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: #1a1c1c;
+  border: 1px solid #272a2a;
+  border-radius: 6px;
+  color: #4a4a4a;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, background 0.15s, border-color 0.15s;
+}
+
+.popup-close:hover {
+  color: #e8e4dc;
+  background: #222525;
+  border-color: #333;
+}
+
+/* Tag */
+.popup-tag {
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  color: #ef4444;
+  text-transform: uppercase;
+  margin-bottom: 9px;
+  font-family: 'Bricolage Grotesque', sans-serif;
+}
+
+/* Title */
+.popup-title {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 21px;
+  font-weight: 700;
+  color: #ede9e1;
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+}
+
+/* Description */
+.popup-desc {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.78;
+  color: #585e5e;
+  margin: 0 0 20px 0;
+}
+
+/* Footer */
+.popup-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid #1c1f1f;
+}
+
+.popup-index {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  color: #303535;
+}
+
+.popup-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.nav-btn {
+  background: #171a1a;
+  border: 1px solid #232626;
+  border-radius: 6px;
+  color: #4a5050;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.12s;
+}
+
+.nav-btn:hover {
+  background: #1e2222;
+  color: #e8e4dc;
+  border-color: #333;
+}
+
+.nav-btn:active {
+  transform: scale(0.92);
+}
+
+/* ────────────────────────────────────────────────
+   Reduced motion
+──────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .Hotspot { animation: none; }
+  .popup   { transition: opacity 0.15s; }
+}

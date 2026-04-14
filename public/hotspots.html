@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Sneaker 3D Viewer</title>
+  <meta charset="utf-8">
+  <meta name="description" content="Interactive 3D Sneaker Viewer">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Inter:wght@400;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :not(:defined)>* {
+      display: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      color-scheme: dark;
+      background-color: transparent !important;
+      background: transparent !important;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: transparent !important;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      background-color: transparent !important;
+      --poster-color: transparent;
+    }
+
+    /* ── Hotspot ── */
+    .Hotspot {
+      outline: none !important;
+      background: #ef4444;
+      border-radius: 50%;
+      border: 2px solid rgba(239, 68, 68, 0.2);
+      box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.1), 0 2px 12px rgba(239, 68, 68, 0.35);
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      padding: 0;
+      position: relative;
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease;
+      animation: hotspot-pulse 2.6s ease-in-out infinite;
+    }
+
+    @keyframes hotspot-pulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.10), 0 2px 12px rgba(239, 68, 68, 0.35);
+      }
+
+      50% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0.05), 0 2px 22px rgba(239, 68, 68, 0.55);
+      }
+    }
+
+    .Hotspot:hover {
+      transform: scale(1.4);
+      box-shadow: 0 0 0 7px rgba(239, 68, 68, 0.15), 0 4px 20px rgba(239, 68, 68, 0.55);
+      animation: none;
+    }
+
+    .Hotspot.is-active {
+      background: #ef4444;
+      border-color: #fff;
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.45), 0 4px 20px rgba(239, 68, 68, 0.6);
+      transform: scale(1.25);
+      animation: none;
+    }
+
+    .Hotspot:not([data-visible]) {
+      opacity: 0;
+      pointer-events: none;
+      animation: none;
+    }
+
+    /* ── SVG connector ── */
+    #connector-svg {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 100;
+      overflow: visible;
+    }
+
+    /* ── Popup card ── */
+    .popup {
+      display: none;
+      position: fixed;
+      z-index: 200;
+      width: 280px;
+      background: rgba(17, 19, 19, 0.95);
+      border: 1px solid #222525;
+      border-left: 2px solid #ef4444;
+      border-radius: 12px;
+      padding: 26px 26px 20px;
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.025), 0 24px 70px rgba(0, 0, 0, 0.75), 0 6px 20px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      transform: translateY(8px) scale(0.965);
+      transition: opacity 0.28s cubic-bezier(0.4, 0, 0.2, 1), transform 0.28s cubic-bezier(0.34, 1.4, 0.64, 1);
+      will-change: transform, opacity;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .popup.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .popup-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      background: #1a1c1c;
+      border: 1px solid #272a2a;
+      border-radius: 6px;
+      color: #4a4a4a;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
+    }
+
+    .popup-close:hover {
+      color: #e8e4dc;
+      background: #222525;
+      border-color: #333;
+    }
+
+    .popup-tag {
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      color: #ef4444;
+      text-transform: uppercase;
+      margin-bottom: 9px;
+      font-family: 'Bricolage Grotesque', sans-serif;
+    }
+
+    .popup-title {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-size: 21px;
+      font-weight: 700;
+      color: #ede9e1;
+      margin: 0 0 10px 0;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .popup-desc {
+      font-size: 13px;
+      font-weight: 400;
+      line-height: 1.78;
+      color: #888;
+      margin: 0 0 20px 0;
+    }
+
+    .popup-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid #1c1f1f;
+    }
+
+    .popup-index {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: #505555;
+    }
+
+    .popup-nav {
+      display: flex;
+      gap: 6px;
+    }
+
+    .nav-btn {
+      background: #171a1a;
+      border: 1px solid #232626;
+      border-radius: 6px;
+      color: #4a5050;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0;
+      transition: color 0.15s, background 0.15s, border-color 0.15s, transform 0.12s;
+    }
+
+    .nav-btn:hover {
+      background: #1e2222;
+      color: #e8e4dc;
+      border-color: #333;
+    }
+
+    .nav-btn:active {
+      transform: scale(0.92);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .Hotspot {
+        animation: none;
+      }
+
+      .popup {
+        transition: opacity 0.15s;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <model-viewer id="viewer" src="sneakers.glb" scale="1.3 1.3 1.3" camera-controls 
+    shadow-intensity="0" shadow-softness="0" 
+    style="background-color: transparent !important; --poster-color: transparent;">
+
+    <button class="Hotspot" slot="hotspot-1"
+      data-position="-0.12749351711331097m 0.02567287124173108m 0.24210969668326324m"
+      data-normal="-0.26674877473161734m 0.09737601475568666m 0.9588341894871507m"
+      data-visibility-attribute="visible"></button>
+
+    <button class="Hotspot" slot="hotspot-2"
+      data-position="-0.15228044761907655m 0.08694443465406825m 0.003924655712071151m"
+      data-normal="-0.15842586351699056m 0.9836338477785865m -0.08582365217810654m"
+      data-visibility-attribute="visible"></button>
+
+    <button class="Hotspot" slot="hotspot-3"
+      data-position="0.1921098331248401m 0.14580144328086314m -0.006019872527238918m"
+      data-normal="0.9435237027611861m 0.3240575378367043m -0.06891831758708178m"
+      data-visibility-attribute="visible"></button>
+
+    <button class="Hotspot" slot="hotspot-4"
+      data-position="0.13964452257511917m 0.09594597370593186m 0.2309827982881766m"
+      data-normal="0.24209050364058313m 0.032762290593646055m 0.9697003765917112m"
+      data-visibility-attribute="visible"></button>
+
+    <button class="Hotspot" slot="hotspot-5"
+      data-position="0.16854407200995347m 0.14240098591337594m 0.17171127232179625m"
+      data-normal="-0.8472685917042814m -0.5308370576315118m -0.018653465001515056m"
+      data-visibility-attribute="visible"></button>
+
+    <button class="Hotspot" slot="hotspot-6"
+      data-position="-0.027467884459252218m 0.14695436243803608m 0.008734788825433576m"
+      data-normal="-0.6391111697921122m 0.764909735011323m 0.08031195385411752m"
+      data-visibility-attribute="visible"></button>
+
+  </model-viewer>
+
+  <!-- SVG overlay — connector line -->
+  <svg id="connector-svg" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <line id="connector-line" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round" stroke-opacity="0" />
+    <circle id="line-dot" r="5" fill="#ef4444" opacity="0" />
+    <circle id="line-ring" r="10" fill="none" stroke="#ef4444" stroke-width="1" opacity="0" />
+  </svg>
+
+  <!-- Popup card -->
+  <div id="popup" class="popup" role="dialog">
+    <button class="popup-close" id="popup-close" aria-label="Close">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+        <path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+      </svg>
+    </button>
+
+    <div class="popup-tag" id="popup-tag"></div>
+    <h2 class="popup-title" id="popup-title"></h2>
+    <p class="popup-desc" id="popup-desc"></p>
+
+    <div class="popup-footer">
+      <span class="popup-index" id="popup-index"></span>
+      <div class="popup-nav">
+        <button class="nav-btn" id="nav-prev" aria-label="Previous">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M8 2.5L4.5 6.5L8 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+        <button class="nav-btn" id="nav-next" aria-label="Next">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+            <path d="M5 2.5L8.5 6.5L5 10.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+              stroke-linejoin="round" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+
+  <script>
+    const DATA = {
+      'hotspot-1': { tag: 'OUTSOLE', title: 'Rubber Outer Sole', desc: 'Multi-directional traction pattern cut from vulcanized rubber - engineered for grip on any terrain without sacrificing flexibility.', n: 1 },
+      'hotspot-2': { tag: 'TONGUE', title: 'Padded Tongue', desc: 'Triple-density foam tongue with perforated lining reduces pressure points and moves heat away from the foot during extended wear.', n: 2 },
+      'hotspot-3': { tag: 'HEEL', title: 'Heel Counter', desc: 'Rigid TPU shell cradles the calcaneus in anatomical alignment, delivering lateral stability under high dynamic load.', n: 3 },
+      'hotspot-4': { tag: 'TOE BOX', title: 'Reinforced Cap', desc: 'Abrasion-resistant toe cap shields against impact and wear while allowing full natural toe splay and forefoot mobility.', n: 4 },
+      'hotspot-5': { tag: 'LACING', title: 'Eyelet System', desc: 'Flat-weave laces thread through anodized aluminum eyelets, distributing tension evenly across the entire midfoot for a locked-in fit.', n: 5 },
+      'hotspot-6': { tag: 'COLLAR', title: 'Ankle Collar', desc: 'Memory foam collar with moisture-wicking mesh lining adapts to ankle shape and eliminates friction points from the first step.', n: 6 }
+    };
+
+    const KEYS = Object.keys(DATA);
+    const TOTAL = KEYS.length;
+    let active = null;
+    let rafId = null;
+
+    const popup = document.getElementById('popup');
+    const connLine = document.getElementById('connector-line');
+    const lineDot = document.getElementById('line-dot');
+    const lineRing = document.getElementById('line-ring');
+
+    function getBtn(key) {
+      return document.querySelector(`.Hotspot[slot="${key}"]`);
+    }
+
+    // ── Always-on RAF: redraws line EVERY frame while active ──
+    function drawLine() {
+      if (!active) return;
+      const btn = getBtn(active);
+      if (!btn) { rafId = requestAnimationFrame(drawLine); return; }
+
+      const br = btn.getBoundingClientRect();
+      const bx = br.left + br.width / 2;
+      const by = br.top + br.height / 2;
+      const pr = popup.getBoundingClientRect();
+
+      // Connect to the nearest edge of the popup
+      const popupCx = pr.left + pr.width / 2;
+      const popupCy = pr.top + pr.height / 2;
+      let ex, ey;
+
+      // Find the closest point on the popup edge
+      if (bx < pr.left) {
+        ex = pr.left;
+      } else if (bx > pr.right) {
+        ex = pr.right;
+      } else {
+        ex = bx;
+      }
+
+      if (by < pr.top) {
+        ey = pr.top;
+      } else if (by > pr.bottom) {
+        ey = pr.bottom;
+      } else {
+        ey = by;
+      }
+
+      // Prefer connecting to the vertical center of the left or right edge
+      const toRight = bx < popupCx;
+      ex = toRight ? pr.left : pr.right;
+      ey = pr.top + pr.height / 2;
+
+      connLine.setAttribute('x1', bx);
+      connLine.setAttribute('y1', by);
+      connLine.setAttribute('x2', ex);
+      connLine.setAttribute('y2', ey);
+      connLine.setAttribute('stroke-opacity', '0.6');
+
+      lineDot.setAttribute('cx', bx);
+      lineDot.setAttribute('cy', by);
+      lineDot.setAttribute('opacity', '1');
+
+      lineRing.setAttribute('cx', bx);
+      lineRing.setAttribute('cy', by);
+      lineRing.setAttribute('opacity', '0.35');
+
+      rafId = requestAnimationFrame(drawLine);
+    }
+
+    function stopTracking() {
+      if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    }
+
+    // ── Hide ──
+    function hideAll() {
+      stopTracking();
+      popup.classList.remove('visible');
+      connLine.setAttribute('stroke-opacity', '0');
+      lineDot.setAttribute('opacity', '0');
+      lineRing.setAttribute('opacity', '0');
+      if (active) {
+        const b = getBtn(active);
+        if (b) b.classList.remove('is-active');
+      }
+      active = null;
+      setTimeout(() => { if (!active) popup.style.display = 'none'; }, 300);
+    }
+
+    // ── Show ──
+    function showPopup(key) {
+      const d = DATA[key];
+      if (!d || active === key) return;
+
+      if (active) {
+        // Fade out current
+        popup.classList.remove('visible');
+        const prev = getBtn(active);
+        if (prev) prev.classList.remove('is-active');
+
+        // Wait for fade out transition to finish (approx 300ms)
+        setTimeout(() => {
+          _doShowPopup(key, d);
+        }, 300);
+      } else {
+        _doShowPopup(key, d);
+      }
+    }
+
+    function _doShowPopup(key, d) {
+      stopTracking();
+      active = key;
+
+      const btn = getBtn(key);
+      if (btn) btn.classList.add('is-active');
+
+      document.getElementById('popup-tag').textContent = d.tag;
+      document.getElementById('popup-title').textContent = d.title;
+      document.getElementById('popup-desc').textContent = d.desc;
+      document.getElementById('popup-index').textContent =
+        `${String(d.n).padStart(2, '0')} — ${String(TOTAL).padStart(2, '0')}`;
+
+      popup.style.display = 'block';
+      popup.classList.remove('visible');
+
+      // Position popup: always pin to right or left edge of screen
+      setTimeout(() => {
+        if (!btn || active !== key) return;
+
+        const br = btn.getBoundingClientRect();
+        const bx = br.left + br.width / 2;
+        const by = br.top + br.height / 2;
+        const pw = popup.offsetWidth, ph = popup.offsetHeight;
+        const margin = 20;
+
+        // If hotspot is in left half, put card on far right; otherwise far left
+        const toRight = bx < window.innerWidth / 2;
+        popup.style.left = (toRight ? window.innerWidth - margin - pw : margin) + 'px';
+        popup.style.top = Math.max(margin, Math.min(by - ph / 2, window.innerHeight - ph - margin)) + 'px';
+
+        popup.classList.add('visible');
+
+        // Start continuous line tracking immediately
+        stopTracking();
+        rafId = requestAnimationFrame(drawLine);
+      }, 16);
+    }
+    // ── Events ──
+    document.addEventListener('click', e => {
+      const hotspot = e.target.closest('.Hotspot');
+      if (hotspot) {
+        const key = hotspot.getAttribute('slot');
+        active === key ? hideAll() : showPopup(key);
+        return;
+      }
+      if (popup.contains(e.target)) return;
+      if (active) hideAll();
+    });
+
+    document.getElementById('popup-close').addEventListener('click', e => {
+      e.stopPropagation();
+      hideAll();
+    });
+
+    document.getElementById('nav-prev').addEventListener('click', e => {
+      e.stopPropagation();
+      if (!active) return;
+      showPopup(KEYS[(KEYS.indexOf(active) - 1 + TOTAL) % TOTAL]);
+    });
+    document.getElementById('nav-next').addEventListener('click', e => {
+      e.stopPropagation();
+      if (!active) return;
+      showPopup(KEYS[(KEYS.indexOf(active) + 1) % TOTAL]);
+    });
+
+    // ── Force model-viewer background transparent ──
+    const viewer = document.getElementById('viewer');
+    viewer.addEventListener('load', () => {
+      // Remove any internal canvas background
+      const canvas = viewer.shadowRoot && viewer.shadowRoot.querySelector('canvas');
+      if (canvas) canvas.style.background = 'transparent';
+
+      // Also try to access the internal container
+      const container = viewer.shadowRoot && viewer.shadowRoot.querySelector('.container');
+      if (container) container.style.background = 'transparent';
+    });
+  </script>
+</body>
+
+</html>

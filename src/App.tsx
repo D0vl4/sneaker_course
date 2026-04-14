@@ -4,7 +4,6 @@ import SlideOne from "./components/demo";
 import SlideQuote from "./components/slides/SlideQuote";
 import SlideTwo from "./components/slides/SlideTwo";
 import SlideFour from "./components/slides/SlideFour";
-import SlideThree from "./components/slides/SlideThree";
 import SlideFive from "./components/slides/SlideFive";
 import SlideSix from "./components/slides/SlideSix";
 import { AnimatedDock } from "./components/ui/animated-dock";
@@ -18,7 +17,7 @@ import SlideEight from "./components/slides/SlideEight";
 import SlideNine from "./components/slides/SlideNine";
 import { LayoutList, Settings, ArrowLeft, ArrowRight } from "lucide-react";
 
-const TOTAL_SLIDES = 10;
+const TOTAL_SLIDES = 9;
 
 function App() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -191,6 +190,7 @@ function App() {
             <SlideSix />
           </motion.div>
         )}
+
         {currentSlide === 6 && (
           <motion.div
             key="slide-6"
@@ -202,7 +202,7 @@ function App() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
-            <SlideThree />
+            <SlideSeven />
           </motion.div>
         )}
         {currentSlide === 7 && (
@@ -216,26 +216,12 @@ function App() {
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0"
           >
-            <SlideSeven />
+            <SlideEight />
           </motion.div>
         )}
         {currentSlide === 8 && (
           <motion.div
             key="slide-8"
-            custom={direction}
-            variants={variants}
-            initial="enter"
-            animate="center"
-            exit="exit"
-            transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0"
-          >
-            <SlideEight />
-          </motion.div>
-        )}
-        {currentSlide === 9 && (
-          <motion.div
-            key="slide-9"
             custom={direction}
             variants={variants}
             initial="enter"

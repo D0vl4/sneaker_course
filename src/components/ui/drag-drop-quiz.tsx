@@ -232,7 +232,7 @@ export default function DragDropQuiz({ items, onComplete }: DragDropQuizProps) {
 
                 {/* Drop zone - full width on mobile, fixed on desktop */}
                 <div
-                  className={`relative flex-1 sm:flex-initial rounded-lg cursor-pointer transition-all duration-300 flex items-center justify-center ${extraClass}`}
+                  className={`relative flex-1 sm:flex-initial sm:w-60 lg:w-72 rounded-lg cursor-pointer transition-all duration-300 flex items-center justify-center ${extraClass}`}
                   style={{
                     minWidth: 0,
                     height: 44,

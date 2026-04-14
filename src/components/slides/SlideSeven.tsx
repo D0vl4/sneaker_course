@@ -1,63 +1,7 @@
 import { DotPattern } from "@/components/ui/dot-pattern";
 import LightRays from "@/components/LightRays";
 import GradientText from "@/components/GradientText";
-import CardFlip from "@/components/ui/flip-card";
 import type { FC } from "react";
-
-const cards = [
-  {
-    title: "Materials & Textiles",
-    subtitle: "The foundation of every sneaker",
-    description:
-      "From premium leather to Flyknit and Primeknit, materials define comfort, durability, and aesthetics. Understanding textile properties is essential for any sneaker designer.",
-    features: [
-      "Mesh & Knit Uppers",
-      "Leather & Synthetics",
-      "Sustainable Materials",
-      "Performance Fabrics",
-    ],
-    icon: "layers" as const,
-  },
-  {
-    title: "Color Theory",
-    subtitle: "Telling stories through palettes",
-    description:
-      "Color drives consumer emotion and brand recognition. Great sneaker designers master color blocking, contrast ratios, and seasonal trend forecasting.",
-    features: [
-      "Color Blocking",
-      "Trend Forecasting",
-      "Brand Colorways",
-      "Cultural Influence",
-    ],
-    icon: "palette" as const,
-  },
-  {
-    title: "Sole Engineering",
-    subtitle: "Where science meets the street",
-    description:
-      "The sole is the engine of a sneaker. From Air Max cushioning to Boost foam technology, sole design balances performance, weight, and visual impact.",
-    features: [
-      "Cushioning Systems",
-      "Traction Patterns",
-      "Midsole Technology",
-      "Outsole Durability",
-    ],
-    icon: "footprints" as const,
-  },
-  {
-    title: "Brand Identity",
-    subtitle: "Creating icons that endure",
-    description:
-      "Iconic sneakers transcend footwear — they become cultural symbols. Building brand identity means aligning design language with storytelling and market positioning.",
-    features: [
-      "Logo & Branding",
-      "Signature Silhouettes",
-      "Collaboration Strategy",
-      "Market Positioning",
-    ],
-    icon: "sparkles" as const,
-  },
-];
 
 const SlideSeven: FC = () => {
   return (
@@ -100,7 +44,7 @@ const SlideSeven: FC = () => {
             animationSpeed={6}
             className="!m-0 !justify-start text-xl sm:text-2xl lg:text-4xl !font-extrabold"
           >
-            Key Design Disciplines
+            Anatomy of a Sneaker
           </GradientText>
         </div>
 
@@ -114,26 +58,20 @@ const SlideSeven: FC = () => {
               fontSize: "var(--fs-body)",
             }}
           >
-            Explore the four pillars of sneaker design. Hover each card to
-            discover what makes great footwear.
+            Interact with the 3D model below to explore the key components and hotspots of modern sneaker design.
           </p>
         </div>
 
-        {/* Cards row */}
-        <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
-          <div className="flex flex-col items-center gap-4 sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-4 lg:gap-5 w-full max-w-[1200px] mx-auto px-2 sm:place-items-center">
-            {cards.map((card) => (
-              <CardFlip
-                key={card.title}
-                title={card.title}
-                subtitle={card.subtitle}
-                description={card.description}
-                features={card.features}
-                color="#ef4444"
-                icon={card.icon}
-              />
-            ))}
-          </div>
+        {/* 3D Model Iframe */}
+        <div className="flex-1 min-h-0 w-full max-w-[1200px] mx-auto relative mb-4">
+          <iframe 
+            src="/hotspots.html?v=4" 
+            title="3D Sneaker Viewer" 
+            className="w-full h-full border-none"
+            style={{ background: "transparent", colorScheme: "dark" }}
+            allow="xr-spatial-tracking"
+            allowTransparency={true}
+          />
         </div>
       </div>
 

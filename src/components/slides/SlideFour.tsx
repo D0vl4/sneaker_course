@@ -75,7 +75,7 @@ export default function SlideFour({ userResponse, onSendResponse }: SlideFourPro
         {/* Two-column layout: chat input + video placeholder */}
         <div className="flex flex-col lg:flex-row gap-4 sm:gap-6">
           {/* Animated AI Chat input */}
-          <div className="flex-1 min-h-[200px] sm:min-h-[280px] lg:h-[520px] rounded-xl backdrop-blur-sm overflow-hidden flex flex-col transition-colors duration-500" style={{ backgroundColor: 'var(--slide-card-bg)', border: '1px solid var(--slide-card-border)' }}>
+          <div className="flex-1 min-h-[200px] sm:min-h-[280px] rounded-xl backdrop-blur-sm overflow-hidden flex flex-col transition-colors duration-500" style={{ backgroundColor: 'var(--slide-card-bg)', border: '1px solid var(--slide-card-border)' }}>
             {userResponse ? (
               <div className="p-4 sm:p-5 flex flex-col h-full">
                 <span className="text-[10px] font-mono tracking-wider mb-3" style={{ color: 'var(--slide-text-faint)' }}>YOUR RESPONSE</span>
@@ -95,7 +95,7 @@ export default function SlideFour({ userResponse, onSendResponse }: SlideFourPro
           </div>
 
           {/* Video placeholder */}
-          <div className="flex-1 min-h-[200px] sm:min-h-[280px] lg:h-[520px] rounded-xl border-2 border-dashed border-yellow-400/50 bg-black/20 backdrop-blur-sm overflow-hidden relative flex items-center justify-center">
+          <div className="flex-1 min-h-[200px] sm:min-h-[280px] aspect-[800/533] rounded-xl border-2 border-dashed border-yellow-400/50 bg-black/20 backdrop-blur-sm overflow-hidden relative flex items-center justify-center">
             <div className="text-center p-4">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full border-2 flex items-center justify-center" style={{ borderColor: 'var(--slide-text-faint)' }}>
                 <svg className="w-6 h-6 ml-1" fill="currentColor" viewBox="0 0 24 24" style={{ color: 'var(--slide-text-faint)' }}>
